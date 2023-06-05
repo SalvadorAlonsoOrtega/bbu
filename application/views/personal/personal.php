@@ -23,6 +23,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	
 	?>
 			<a class="btn btn-primary" href="<?php echo site_url("Personal/agregarPersona")?>"><i class="fas fa-user-plus"></i> Nuevo registro </a>
+            <button class="btn btn-success actualizarTabla"><i class="fas fa-sync"></i> Actualizar tabla </button>
+            
 			<br/>
 			<br/>
 			
@@ -52,7 +54,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     
 						foreach ($personal as $persona) {
 							echo "<tr id='".$persona->idPersonal."'>";
-							echo "<td class='personal'>" . str_pad($persona->idPersonal, 7,"0", STR_PAD_LEFT)  . "</td>";
+							echo "<td class='personal'>" . str_pad($persona->idPersonal, 4,"0", STR_PAD_LEFT)  . "</td>";
 
 							echo "<td>" . $persona->sNombre  . "</td>";
                             echo "<td>" . $persona->sPaterno  . "</td>";
@@ -64,7 +66,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						
                             echo "<td>";
                             echo "<button id='".$persona->idPersonal."' class='btn btn-primary verPersona'><span class='fas fa-eye'></button>";
-                            echo "<button class='btn btn-warning'><span class='fas fa-edit'></button>";
+                            echo "<button id='".$persona->idPersonal."' class='btn btn-warning editarPersona'><span class='fas fa-edit'></button>";
                             echo "<button class='btn btn-danger'><span class='fas fa-trash'></span></button>";
                             echo "</td>";
 														
@@ -142,9 +144,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <!-- Fin de Ventana modal para visualizar y modificar -->
 
 <script type="text/javascript">
+$(".actualizarTabla").on("click", function(){
+    window.location.href = SiteUrl + "<?php echo "/Personal/verPersonal"; ?>";
+});
 
 $(".verPersona").on("click", function(){
-
     let idPersona=$(this).prop("id");
     $.ajax({
             url: SiteUrl + "/Personal/consultarPersona",
@@ -155,12 +159,12 @@ $(".verPersona").on("click", function(){
         .done(function (html) {
             html=JSON.parse(html);
                 if (html.error==true){
-                    respuesta=0;
+
                     Swal.fire('Error al obtener los datos de la persona',
                                 '',
                                 'error')
                 }else{
-                    respuesta=1;
+
                     
                     $("#tituloModal").html("ID Persona " + idPersona );
                     $("#contenidoModal").html(html.datos);
@@ -168,15 +172,34 @@ $(".verPersona").on("click", function(){
                 }
         });
 
-        //return respuesta;
+
 
 });
 
-// function verDetallePersona(idPersona){
-
-        
-        
-// }
+$(".editarPersona").on("click", function(){
+    let idPersona=$(this).prop("id");
+    $.ajax({
+            url: SiteUrl + "/Personal/editarPersona",
+            dataType: 'html',
+            data:'idPersona=' + idPersona,
+            method: 'post'
+        })
+        .done(function (html) {
+            html=JSON.parse(html);
+                if (html.error==true){
+                    
+                    Swal.fire('Error al obtener los datos de la persona',
+                                '',
+                                'error')
+                }else{
+                    
+                    
+                    $("#tituloModal").html("ID Persona " + idPersona );
+                    $("#contenidoModal").html(html.datos);
+                    $("#modal-xl").modal("show");
+                }
+        });
+});
 
 
 var rutaIdioma="<?php echo base_url()."plugins/datatables/es-mx.json"; ?>";
@@ -193,10 +216,6 @@ $(document).ready( function () {
     	},
 		"order": [0,'desc'],	
     });
-
-	
-		 
-
 
 } ); // fin de on ready
 

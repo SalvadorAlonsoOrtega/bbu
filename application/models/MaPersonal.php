@@ -52,7 +52,7 @@ class MaPersonal extends CI_Model {
 
     function guardaPersona($datos){
         /**
-         * @about Obtiene la lista de puestos de personal.
+         * @about Guarda los datos de una persona por primera vez.
          */
         $query="insert into
                 maPersonal
@@ -63,6 +63,25 @@ class MaPersonal extends CI_Model {
         return $respuesta;
 
     }
+    
+    function actualizaPersona($datos){
+        /**
+         * @about Actualiza los datos de una persona previamente registrada.
+         */
+        $query="update
+                maPersonal
+                set 
+                sNombre='".$datos['nombre']."',
+                sPaterno='".$datos['paterno']."',
+                sMaterno='".$datos['materno']."',
+                sCURP='".$datos['curp']."',
+                idPuesto=".$datos['puesto']."
+                where idPersonal=".$datos['idPersonal'];
+        $respuesta=$this->db->simple_query($query);
+        return $respuesta;
+
+    }
+    
 
 }
 ?>
