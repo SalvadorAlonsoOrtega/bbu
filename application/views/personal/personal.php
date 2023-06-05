@@ -26,7 +26,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			<br/>
 			<br/>
 			
-			<table class="table table-hover table-striped table-bordered table-sm table-responsive " id="tablaEgresos">
+			<table class="table table-hover table-striped table-bordered table-sm table-responsive " id="tablaPersonal">
 				<thead class="thead-dark text-center" >
 					<tr>
 						<th>ID Personal</th>
@@ -63,7 +63,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 						
                             echo "<td>";
-                            echo "<button class='btn btn-primary fas fa-eye'></button>";
+                            echo "<button id='".$persona->idPersonal."' class='btn btn-primary verPersona'><span class='fas fa-eye'></button>";
                             echo "<button class='btn btn-warning'><span class='fas fa-edit'></button>";
                             echo "<button class='btn btn-danger'><span class='fas fa-trash'></span></button>";
                             echo "</td>";
@@ -114,59 +114,77 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<div class="col-md-1">
 
 	</div>
-
-<form id="frmPidePoliza" action="../Reportes/generarPolizaCheque" method="post" target="_blank">
-	<input id="idEgreso" name="idEgreso" type="hidden" value="" />
-
-</form>
-
 </div>
 
+<!-- Iniio de Ventana modal para visualizar y modificar  -->
+<div class="modal fade" id="modal-xl">
+        <div class="modal-dialog modal-xl">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title" id="tituloModal"></h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body" id="contenidoModal">
+              <!-- contenido -->
+            </div>
+            <div class="modal-footer justify-content-right">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+              <!-- pie del modal -->
+            </div>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+      </div>
+      <!-- /.modal -->
+<!-- Fin de Ventana modal para visualizar y modificar -->
+
 <script type="text/javascript">
-	
-var rutaIdioma="<?php echo base_url()."plugins/datatables/es-mx.json"; ?>";
 
+$(".verPersona").on("click", function(){
 
-function verEgreso(arrEgresos){
+    let idPersona=$(this).prop("id");
+    $.ajax({
+            url: SiteUrl + "/Personal/consultarPersona",
+            dataType: 'html',
+            data:'idPersona=' + idPersona,
+            method: 'post'
+        })
+        .done(function (html) {
+            html=JSON.parse(html);
+                if (html.error==true){
+                    respuesta=0;
+                    Swal.fire('Error al obtener los datos de la persona',
+                                '',
+                                'error')
+                }else{
+                    respuesta=1;
+                    
+                    $("#tituloModal").html("ID Persona " + idPersona );
+                    $("#contenidoModal").html(html.datos);
+                    $("#modal-xl").modal("show");
+                }
+        });
 
-var respuesta=0;
-datos=arrEgresos.toString();
+        //return respuesta;
 
-
-if (datos.indexOf(",")!=-1){
-	Swal.fire('Selecciona sólo un registro de egreso', '', 'error');
-	return false;
-}
-
-$.ajax({
-	url: SiteUrl + "/Administrativo/Egresos/consultarEgreso",
-	dataType: 'html',
-	data:'idEgreso=' + datos,
-	method: 'post'
-})
-.done(function (html) {
-	html=JSON.parse(html);
-		if (html.error==true){
-			respuesta=0;
-			Swal.fire('Error al obtener los datos del egreso',
-						'',
-						'error')
-		}else{
-			respuesta=1;
-			console.log(html.datos);
-			$("#tituloModal").html("Egreso " + datos );
-			$("#contenidoModal").html(html.datos);
-			$("#modal-xl").modal("show");
-		}
 });
-return respuesta;
-}
 
+// function verDetallePersona(idPersona){
+
+        
+        
+// }
+
+
+var rutaIdioma="<?php echo base_url()."plugins/datatables/es-mx.json"; ?>";
 
 $(document).ready( function () {
 
 	// configura datatable
-    var tablaEgresos=$('#tablaEgresos').DataTable({
+    var tablaPersonal=$('#tablaPersonal').DataTable({
 
 		
     	"language": {
@@ -177,38 +195,12 @@ $(document).ready( function () {
     });
 
 	
-
-// $('#tablaEgresos').dblclick(function () {
-// 	alert("dblclick");
-// });
-
-// Cambia la clase a seleccionado
-// $('#tablaEgresos tbody').on(
-// 'click', 'tr', function () {
-// 	// $('#tablaEgresos tbody tr').removeClass("selected");
-// 	// $(this).addClass('selected');
-// 	$(this).toggleClass('selected');
-// });
 		 
-$('#verEgreso').click(function () {
-	var arrTabla=tablaEgresos.rows('.selected').data().toArray();
-	var arrFilasSeleccionadas=[]; 
-	var respuesta=0;
 
-	// si no hay elementos en el arreglo, es decir no se seleccionó ningún recibo
-	if (arrTabla.length==0){
-		Swal.fire('Debe seleccionar al menos un registro de egreso', '', 'error');
-		return false;
-	}
-
-	arrTabla.forEach( elemento => {
-		arrFilasSeleccionadas.push(parseInt(elemento[0]));
-		});
-		verEgreso(arrFilasSeleccionadas);
-	
-}); // fin de click de ver egresos 
 
 } ); // fin de on ready
+
+
 
 
 

@@ -8,12 +8,19 @@ class MaPersonal extends CI_Model {
         date_default_timezone_set('America/Mexico_City');
     }
     
-   function obtenerPersonal(){
+   function obtenerPersonal($idPersona=0){
     /**
      * 
      * @about Función para obtener a los empleados (personal). 
      *
      * */    
+    if ($idPersona==0){
+        $strWhere="";
+    }else{
+        $strWhere=" where mp.idPersonal=" . $idPersona . " ";
+    }
+
+
         $query="select
                 mp.idPersonal 
                 , mp.sNombre 
@@ -25,6 +32,7 @@ class MaPersonal extends CI_Model {
                 from maPersonal mp
                 left join catPuestoPersonal cpp 
                 on mp.idPuesto =cpp.idPuesto 
+                ".$strWhere."
                 order by mp.idPersonal asc";
         return $this->db->query($query)->result();
     }

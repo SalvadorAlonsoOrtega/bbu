@@ -143,4 +143,46 @@ class Personal extends CI_Controller {
 
 	}
 
+    public function consultarPersona(){
+		/**
+		 * @about Obtiene datos para las vistas de editar y visualizar datos de personal
+		 * 
+		 */
+            if ((isset($_SESSION['User']))){
+                    
+                    $this->load->model('MaPersonal');
+
+                    $datos['idPersona']=$this->input->post('idPersona');
+                  
+                    $respuesta['datosPersonales']=$this->MaPersonal->obtenerPersonal($datos['idPersona']);
+                    $datos['datosVistaHTMLPersona']=$this->load->view('personal/vistaLecturaPersonal',$respuesta,TRUE);
+                    
+                    if ($respuesta==true){
+                        $result['error']=false;
+                        $result['mensaje']="";
+                        $result['datos']=$datos['datosVistaHTMLPersona'];
+
+                    }else{
+                        $result['error']=true;
+                        $result['mensaje']="Error al recuperar los datos.";
+                        $result['datos']="";
+    
+                    }
+    
+                    echo json_encode($result);
+
+            }else{
+                  echo "<script type='text/javascript'>alert('La sessión ha expirado.')</script> ";
+                    echo "<script type='text/javascript'>window.location.replace('". site_url() ."')</script>";
+            }
+            
+    
+        
+		
+
+	}
+
+
+    
+
 }
