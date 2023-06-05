@@ -5,7 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 	<div class="col-lg-12 text-center">
 		
-		<h2><strong>Personal</strong></h2>
+		<h2><strong>Personl </strong></h2>
 
 	</div>
 
@@ -67,7 +67,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             echo "<td>";
                             echo "<button id='".$persona->idPersonal."' class='btn btn-primary verPersona'><span class='fas fa-eye'></button>";
                             echo "<button id='".$persona->idPersonal."' class='btn btn-warning editarPersona'><span class='fas fa-edit'></button>";
-                            echo "<button class='btn btn-danger'><span class='fas fa-trash'></span></button>";
+                            echo "<button id='".$persona->idPersonal."' class='btn btn-danger eliminarPersona'><span class='fas fa-trash'></span></button>";
                             echo "</td>";
 														
 							echo "</tr>";
@@ -201,6 +201,35 @@ $(".editarPersona").on("click", function(){
         });
 });
 
+$(".eliminarPersona").on("click", function(){
+    let idPersona=$(this).prop("id");
+
+    if (confirm("¿Confirma la eliminación PERMANENTE de esta persona?")==true){
+        $.ajax({
+                url: SiteUrl + "/Personal/eliminarPersona",
+                dataType: 'html',
+                data:'idPersona=' + idPersona,
+                method: 'post'
+            })
+            .done(function (html) {
+                html=JSON.parse(html);
+                    if (html.error==true){
+                        
+                        Swal.fire('Error eliminar a la persona',
+                                    '',
+                                    'error');
+                    }else{
+                        Swal.fire('Persona eliminada con éxito.',
+                                    '',
+                                    'success');
+                    }
+        });
+        
+
+    }
+
+   
+});
 
 var rutaIdioma="<?php echo base_url()."plugins/datatables/es-mx.json"; ?>";
 

@@ -263,6 +263,47 @@ class Personal extends CI_Controller {
 
 	}
 
+    public function eliminarPersona(){
+		/**
+		 * @about Elimina el registro de una persona.
+		 * 
+		 */
+            if ((isset($_SESSION['User']))){
+                    
+                    $this->load->model('MaPersonal');
+
+                    $datos['idPersona']=$this->input->post('idPersona');
+                  
+                    $respuesta=$this->MaPersonal->eliminaPersonal($datos['idPersona']);
+                    
+                    
+                    
+                    if ($respuesta==true){
+                        $result['error']=false;
+                        $result['mensaje']="";
+
+                    }else{
+                        $result['error']=true;
+                        $result['mensaje']="Error al ejecutar operación.";
+
+    
+                    }
+    
+                    echo json_encode($result);
+
+            }else{
+                  echo "<script type='text/javascript'>alert('La sessión ha expirado.')</script> ";
+                    echo "<script type='text/javascript'>window.location.replace('". site_url() ."')</script>";
+            }
+            
+    
+        
+		
+
+	}
+
+    
+
 
     
 

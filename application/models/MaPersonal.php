@@ -5,7 +5,7 @@ class MaPersonal extends CI_Model {
     function __construct() {
         $this->load->database();
         parent::__construct();
-        date_default_timezone_set('America/Mexico_City');
+        
     }
     
    function obtenerPersonal($idPersona=0){
@@ -77,6 +77,17 @@ class MaPersonal extends CI_Model {
                 sCURP='".$datos['curp']."',
                 idPuesto=".$datos['puesto']."
                 where idPersonal=".$datos['idPersonal'];
+        $respuesta=$this->db->simple_query($query);
+        return $respuesta;
+
+    }
+
+    
+    function eliminaPersonal($idPersona){
+        /**
+         * @about Elimina persona.
+         */
+        $query="delete from maPersonal where idPersonal=".$idPersona;
         $respuesta=$this->db->simple_query($query);
         return $respuesta;
 
