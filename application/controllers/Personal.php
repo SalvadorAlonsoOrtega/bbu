@@ -41,7 +41,7 @@ class Personal extends CI_Controller {
 
 		if ((isset($_SESSION['User']))){
 
-			if($_SESSION['User']->sCorreo=="admin@empresa.org"){
+			
 				$this->load->view('cabecera/cabecera');
 				
 				$this->load->view('cuerpo/inicio-wrapper');
@@ -53,10 +53,7 @@ class Personal extends CI_Controller {
 
 				
 				$this->load->view('pie/pie.php');
-			}else{
-			  echo "<script type='text/javascript'>alert('Sin permisos para esta sección.')</script> ";
-  			  echo "<script type='text/javascript'>window.location.replace('". site_url() ."')</script>";
-			}
+
 		}else{
 			  echo "<script type='text/javascript'>alert('La sessión ha expirado.')</script> ";
   			  echo "<script type='text/javascript'>window.location.replace('". site_url() ."')</script>";

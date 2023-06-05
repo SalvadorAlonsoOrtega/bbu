@@ -5,7 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 	<div class="col-lg-12 text-center">
 		
-		<h2><strong>Personl </strong></h2>
+		<h2><strong>Personal </strong></h2>
 
 	</div>
 
