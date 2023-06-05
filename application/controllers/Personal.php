@@ -5,8 +5,6 @@ class Personal extends CI_Controller {
 
 	public function index()
 	{
-		// date_default_timezone_set('America/Mexico_City');
-
 
 		if ((isset($_SESSION['User']))){
 		$datos['mostrarImagen']=true;
